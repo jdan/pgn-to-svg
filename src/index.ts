@@ -24,12 +24,14 @@ const SQUARE_SIZE = 45;
 type Options = {
   lightSquareColor?: string;
   darkSquareColor?: string;
+  lastMoveHighlight?: string;
   pgn?: string;
 };
 
 export default function pgnToSvg({
   lightSquareColor = "#dee3e6",
   darkSquareColor = "#8ca2ad",
+  lastMoveHighlight = "rgba(155,199,0,0.41)",
   pgn,
 }: Options = {}) {
   const svg = SVG(window.document.documentElement);
@@ -38,6 +40,10 @@ export default function pgnToSvg({
     chess.load_pgn(pgn);
   }
 
+  const { from: lastMoveFrom, to: lastMoveTo } = chess
+    .history({ verbose: true })
+    .reverse()[0];
+
   chess.board().map((row, y) => {
     row.map((piece, x) => {
       const square = SVG()
@@ -45,6 +51,19 @@ export default function pgnToSvg({
         .move(x * SQUARE_SIZE, y * SQUARE_SIZE)
         .fill(x % 2 == y % 2 ? lightSquareColor : darkSquareColor);
       svg.add(square);
+
+      const abc = "abcdefgh";
+      const currentSquareSan = abc[x] + (8 - y);
+      if (
+        currentSquareSan === lastMoveFrom ||
+        currentSquareSan === lastMoveTo
+      ) {
+        const highlight = SVG()
+          .rect(SQUARE_SIZE, SQUARE_SIZE)
+          .move(x * SQUARE_SIZE, y * SQUARE_SIZE)
+          .fill(lastMoveHighlight);
+        svg.add(highlight);
+      }
 
       if (piece) {
         const key = (piece.color + piece.type) as keyof typeof pieces;
