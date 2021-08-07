@@ -1,20 +1,18 @@
 {
+  "name": "pgn-to-svg",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "build:watch": "tsc -w",
-    "start": "node dist/index.js"
+    "build:watch": "tsc -w"
   },
   "devDependencies": {
     "@tsconfig/node12": "^1.0.9",
     "@types/chess.js": "^0.11.2",
     "@types/node": "^16.4.13",
-    "svgdom": "^0.1.8",
     "typescript": "^4.3.5"
   },
   "dependencies": {
-    "@svgdotjs/svg.js": "^3.1.1",
     "chess.js": "^0.12.0"
   }
 }
